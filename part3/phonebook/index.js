@@ -2,7 +2,6 @@ require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const Person = require('./models/person')
-const mongoose = require('mongoose')
 const app = express()
 
 const requestLogger = (request, response, next) => {
@@ -53,11 +52,11 @@ app.get('/api/persons/:id', (request, response) => {
   Person.findById(request.params.id).then(result => {
     console.log(result)
     response.send(result.toJSON())
-  }).catch(error => response.status(404).end())
+  }).catch(() => response.status(404).end())
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
-  const {name, number} = request.body
+  const number = request.body.number
   Person.findById(request.params.id)
     .then(person => {
       person.number = number
@@ -75,7 +74,7 @@ app.get('/info', (request, response) => {
 
 
 app.delete('/api/persons/:id', (request, response, next) => {
-  Person.findByIdAndDelete(request.params.id).then(result => {
+  Person.findByIdAndDelete(request.params.id).then(() => {
     response.status(204).end()
   }).catch(error => next(error))
 })
@@ -91,7 +90,7 @@ const errorHandler = (error, request, response, next) => {
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
   }else if(error.name === 'ValidationError'){
-    return response.status(400).send({error: error.message})
+    return response.status(400).send({ error: error.message })
   }
 
   next(error)
