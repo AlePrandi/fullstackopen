@@ -7,11 +7,20 @@ const getData = () => {
     return axios.get(personsUrl)
 }
 
-const AddPerson = (noteObject, setFunct, arr) => {
+const AddPerson = (noteObject, setFunct, arr, setMessage, setErrorMessage) => {
     axios
         .post(personsUrl, noteObject)
         .then(response => {
             setFunct(arr.concat(response.data))
+            setMessage(`Added ${noteObject.name}`)
+            setTimeout(() => {
+                setMessage(null)
+            }, 5000)
+        }).catch(error => {
+            setErrorMessage(error.response.data.error)
+            setTimeout(() => {
+                setErrorMessage(null)
+            }, 5000)
         })
 }
 

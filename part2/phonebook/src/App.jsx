@@ -38,20 +38,20 @@ const Persons = ({ persons, filter, setPersons, setErrorMessage }) => {
   return (
     <>
       {persons
-      .filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
-      .map(person => {
-        return (
-          <Note
-            key={person.id}
-            name={person.name}
-            number={person.number}
-            id={person.id}
-            arr={persons}
-            Funct={setPersons}
-            setErrorMessage={setErrorMessage} />
-        )
-      }
-      )}
+        .filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
+        .map(person => {
+          return (
+            <Note
+              key={person.id}
+              name={person.name}
+              number={person.number}
+              id={person.id}
+              arr={persons}
+              Funct={setPersons}
+              setErrorMessage={setErrorMessage} />
+          )
+        }
+        )}
     </>
   )
 }
@@ -93,29 +93,19 @@ const App = () => {
       name: newName,
       number: newNumber
     }
-    let pres = false
-    let id
-    for (let i = 0; i < persons.length; i++) {
-      if (newName == persons[i].name) {
-        pres = true
-        id = persons[i].id
-      }
-    }
 
-    if (pres) {
+    const existing = persons.find(p => p.name === newName)
+
+    if (existing) {
       if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
-        Services.update(id, personObject, setPersons, persons, setErrorMessage)
+        Services.update(existing.id, personObject, setPersons, persons, setErrorMessage)
         setNewName('')
         setNewNumber('')
       }
     } else {
-      Services.AddPerson(personObject, setPersons, persons)
+      Services.AddPerson(personObject, setPersons, persons, setMessage, setErrorMessage)
       setNewName('')
       setNewNumber('')
-      setMessage(`Added ${newName}`)
-      setTimeout(() => {
-        setMessage(null)
-      }, 3000)
     }
   }
 
@@ -142,8 +132,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message} type="message"/>
-      <Notification message={errorMessage} type="error"/>
+      <Notification message={message} type="message" />
+      <Notification message={errorMessage} type="error" />
       <Input text="filter shown with" value={filter} onChange={HandleFilterChange} />
 
       <h2>add a new</h2>
