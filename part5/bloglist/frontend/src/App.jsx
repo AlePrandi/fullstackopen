@@ -94,7 +94,7 @@ const App = () => {
     return (
       <div>
         <Notification message={error} type="error"/>
-        <LoginForm 
+        <LoginForm
           username={username}
           password={password}
           handleUsernameChange={({ target }) => setUsername(target.value)}
@@ -117,12 +117,12 @@ const App = () => {
     return (
       <div>
         {blogs.map(blog =>
-          <Blog 
-          key={blog.id} 
-          blog={blog} 
-          user={user.name} 
-          updateLikes={updateLikes} 
-          removeBlog={removeBlog}
+          <Blog
+            key={blog.id}
+            blog={blog}
+            user={user.name}
+            updateLikes={updateLikes}
+            removeBlog={removeBlog}
           />
         )}
       </div>
@@ -136,8 +136,8 @@ const App = () => {
         <div>
           <h1>blogs</h1>
           <p>{user.name} logged in <button
-            onClick={() => { 
-              window.localStorage.removeItem('loggedUser') 
+            onClick={() => {
+              window.localStorage.removeItem('loggedUser')
               setUser(null)}}>logout
           </button></p>
           <Notification message={message} type="message"/>
