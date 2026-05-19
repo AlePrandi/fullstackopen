@@ -19,11 +19,13 @@ blogRouter.put('/:id', async (request, response) => {
     return response.status(401).json({ error: 'token invalid' })
   }
 
-  const user = request.user
+  //const user = request.user
   let blog = await Blog.findById(request.params.id)
   if(!blog){
     return response.status(404).end()
   }
+
+  /*
   if(blog.user.toString() === user.id.toString()){
     const likes = request.body.likes
     blog.likes = likes
@@ -37,6 +39,16 @@ blogRouter.put('/:id', async (request, response) => {
   }else{
     response.status(403).json({ error: 'this user cannot modify this note' })
   }
+  */
+  const likes = request.body.likes
+  blog.likes = likes
+  const savedBlog = await blog.save(blog)
+  const populatedBlog = await savedBlog.populate('user', {
+    username: 1,
+    name: 1
+  })
+
+  response.json(populatedBlog)
 })
 
 blogRouter.post('/', async (request, response) => {
